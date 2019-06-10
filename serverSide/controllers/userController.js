@@ -2,6 +2,8 @@ const service=require('../services/userservice');
 
 exports.register=(req,res)=>{
   
+    console.log("controller");
+    
         
         req.checkBody('email','invalid email').isEmail();
         req.checkBody('name','invalid name').isLength({min:3}).isAlpha();
@@ -33,6 +35,7 @@ exports.register=(req,res)=>{
 }
 
 exports.login=(req,res)=>{
+    
     req.checkBody('email','invalid email').isEmail();
     req.checkBody('password','invalid password').isLength({min:8});
 
