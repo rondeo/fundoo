@@ -2,7 +2,7 @@
   "name": "fundoo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
@@ -23,6 +23,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.13",
     "nodemailer": "^6.2.1",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "npm": "^6.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "redis": "^2.8.0",
+    "sonarqube": "0.0.1"
   }
 }
