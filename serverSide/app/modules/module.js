@@ -21,7 +21,7 @@ const jwt = require('jsonwebtoken')
  * @description     getting the package to semd mail to verify the user
  */
 
-const nodemailer=require('../../nodemailer/sendMail')
+const nodemailer = require('../../nodemailer/sendMail')
 /**
  * @param       {fundoo}
  * 
@@ -45,7 +45,7 @@ const fundoo = mongoose.Schema({
 
     * 	"isVerified" : true,
  user email to database
-    */	"isVerified" : true,
+    */	"isVerified": true,
 
     email: {
         type: String,
@@ -77,11 +77,12 @@ const fundoo = mongoose.Schema({
  */
 var fun = mongoose.model('users', fundoo);
 
-var redis=require('redis');
-var client=redis.createClient();
-client.on("error",function(err){
-    console.log("error "+err);
-    
+var redis = require('redis');
+
+var client = redis.createClient();
+client.on("error", function (err) {
+    console.log("error " + err);
+
 })
 /**
  * @function        register
@@ -96,7 +97,7 @@ module.exports.register = (body, callback) => {
     fun.findOne({ "email": body.email }, (err, result) => {
         if (result) {
             //console.log(res);
-            callback("user Already Registered  as "+result.name, result);
+            callback("user Already Registered  as " + result.name, result);
         }
         // if not present save the user data into database
         else {
@@ -106,17 +107,17 @@ module.exports.register = (body, callback) => {
 
             let token = jwt.sign(body, process.env.SECRETKEY);
             console.log(token);
-            
+
             let link = 'http://localhost:3000/#!/registerVerify';
             let payload = { "email": body.email };
 
-            nodemailer.sendMail(link,token,payload,(err,result)=>{
-                if(err){
+            nodemailer.sendMail(link, token, payload, (err, result) => {
+                if (err) {
                     //console.log(err);
-                    callback("err in sending the mail"+err,result)
+                    callback("err in sending the mail" + err, result)
                 }
-                else{
-                    callback(null,"verification link is sent to your mail");
+                else {
+                    callback(null, "verification link is sent to your mail");
                 }
             })
             const newuser = new fun({
@@ -141,7 +142,7 @@ module.exports.register = (body, callback) => {
             })
         }
     })
-   // console.log("register model callback");
+    // console.log("register model callback");
 
 }
 /**
@@ -151,7 +152,7 @@ module.exports.register = (body, callback) => {
  */
 exports.saveUser = (body, callback) => {
     console.log(body);
-    
+
     fun.updateOne({ "email": body.payload.email }, { $set: { "isVerified": true } }, (err, resul) => {
         if (err) {
             console.log("error in verify Model " + err);
@@ -172,38 +173,45 @@ exports.login = (body, callback) => {
     //findOne function finds only one present in database with entered 
     //email and password
     fun.findOne({ "email": body.email }, (err, result) => {
-        if(err){
-            callback(err,result);
+        if (err) {
+            callback(err, result);
         }
         if (!result) {
-           return callback(null, "invalid email ");
+            return callback(null, "invalid email ");
         }
-      
-        
+
+
         else {
-            
-            
-            bcrypt.compare(body.password,result.password, (error, res)=> {
+
+
+            bcrypt.compare(body.password, result.password, (error, res) => {
                 if (error) {
-                    console.log("\n\n\nlogin page\n\n\n");
-                    
-                    console.log(res);
-                    
-                  return  callback("invalid password",res);
+
+
+                    return callback("invalid password", res);
                 }
-                else {console.log(res);
-                   if(!res){
-                    console.log(res);
-                    return  callback("invalid password");
-                   }
-                   var result1={
-                       "name":result.name,
-                       "email": result.email,
-                       "password":result.password
+                else {
+                    // console.log("\n\n\n\n\n"+res+"\n\n\n\n");
+                    if (!res) {
+                        console.log(res);
+                        return callback("invalid password");
                     }
-                   var token=jwt.sign(result1,process.env.SECRETKEY);
-                    client.set(body.email,token)
-                   return callback(null, "logged in as " + result.name);
+                    //saving the result in object 
+                    var result1 = {
+                        "name": result.name,
+                        "email": result.email,
+                        "password": result.password
+                    }
+                    // console.log(result1);
+
+
+                    //    var token=jwt.sign(result1,process.env.SECRETKEY);
+
+                    //storing the user details in the redis 
+                    client.hmset(body.email,result1)
+                    // console.log("\n\n\n"+result+"\n\n\n");
+
+                    return callback(null, "logged in as " + result.name);
                 }
             }
             );
@@ -214,21 +222,21 @@ exports.login = (body, callback) => {
 /**
  * @function           
  */
-exports.forgotPassword=(body,callback)=>{
-    
-    
-    fun.findOne({"email":body.email},(err,result)=>{
-        if(!result){
+exports.forgotPassword = (body, callback) => {
+
+
+    fun.findOne({ "email": body.email }, (err, result) => {
+        if (!result) {
             console.log(err);
-            callback("email not found",result);
+            callback("email not found", result);
         }
-        else{
+        else {
 
             let token = jwt.sign(body, process.env.SECRETKEY);
             console.log(token);
-            callback(null,token);
-            
-            
+            callback(null, token);
+
+
         }
     })
 }

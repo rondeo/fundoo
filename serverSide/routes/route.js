@@ -28,9 +28,7 @@ const auth=require('../middleware/autho')
 //routing to the url's,controller and middleware
 // const LocalStrategy = require('passport-local').Strategy;
 
-router.route('/register').post(passport.authenticate('local',{failureRedirect:'/register'}),function(req,res){
-  res.redirect('/')
-}, userController.register);
+router.route('/register').post(userController.register);
 router.route('/registerVerify').get(auth.authentication,userController.saveUser)
 router.route('/login').post(userController.login);
 router.route('/forgetPassword').post(userController.forgotPassword);
@@ -39,4 +37,5 @@ router. route('/reset').post(auth.authentication,userController.reset);
 
 //router.post('/short',userController.shortCtrl)
 
+router.route('/upload').post(userController.upload)
 module.exports=router;
