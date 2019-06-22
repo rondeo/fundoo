@@ -2,7 +2,7 @@
  * @param           {service}
  * @description     getting the services 
  */
-const service=require('../services/userservice');
+const service = require('../services/userservice');
 /**
  * @function            register
  * 
@@ -12,80 +12,103 @@ const service=require('../services/userservice');
  @returns               {res} 
  */
 
- const upload=require('../config/aws.s3');
+const upload = require('../config/aws.s3');
 
+/**
+ * @param       {bcrypt}
+ * 
+ * @description  loading all the package to bcrypt
+ */
 const bcrypt = require('bcrypt');
 
- var redis=require('redis');
+/**
+ * @param           {redis}
+ * 
+ * @description     loading the package of redis to varible "redis" 
+ */
+var redis = require('redis');
 
- const S3=require('aws-s3');
+/**
+ * @param             {s3}
+ * 
+ * @description       loading the s3 package to variable to "S3"
+ */
+const S3 = require('aws-s3');
 
- var client=redis.createClient();
- client.on("error ",function(err){
-     console.log("error "+err);
-     
- })
+/**
+ * @param           {client}
+ * 
+ * @description     creating the client to using the createClint() function
+ */
+var client = redis.createClient();
+client.on("error ", function (err) {
+    console.log("error " + err);
 
+})
 
-exports.register=(req,res)=>{
-  
+/**
+ * @function        register
+ * 
+ * @description     used to register the user data
+ */
+
+exports.register = (req, res) => {
+
     console.log(req);
-    
-        //validating the data
-        //validatind the email
-        req.checkBody('email','invalid email').isEmail();
-        //validating the name it should contain atleast 3 letters 
-        req.checkBody('name','invalid name').isLength({min:3}).isAlpha();
-        //password should have atleast 8 characters
-        req.checkBody('password','invalid Password').isLength({min:8});
-        var errors = req.validationErrors();       
-        //display the errors  
-        if(errors)
-        {
-           
-            
-            console.log(errors[0].msg);
-            
-            res.send(errors[0].msg);
-        }
-        else{
-            //calling the service
-    service.register(req.body,(err,result)=>{
-        if(err)
-        {
-            
-            console.log((err));
-            
-            res.send(err);    
-            
 
-        }
-        else{
-           // console.log("Registeration Successfull");
-            
-            res.send("Registeration Successfull")
-        }
-        
-    })
-}
+    //validating the data
+    //validatind the email
+    req.checkBody('email', 'invalid email').isEmail();
+    //validating the name it should contain atleast 3 letters 
+    req.checkBody('name', 'invalid name').isLength({ min: 3 }).isAlpha();
+    //password should have atleast 8 characters
+    req.checkBody('password', 'invalid Password').isLength({ min: 8 });
+    var errors = req.validationErrors();
+    //display the errors  
+    if (errors) {
+
+
+        console.log(errors[0].msg);
+
+        res.send(errors[0].msg);
+    }
+    else {
+        //calling the service
+        service.register(req.body, (err, result) => {
+            if (err) {
+
+                console.log((err));
+
+                res.send(err);
+
+
+            }
+            else {
+                // console.log("Registeration Successfull");
+
+                res.send("Registeration Successfull")
+            }
+
+        })
+    }
 }
 /**
  * @function            saveUser
  * 
  * @description         used to store the user data after verification
  */
-exports.saveUser=(req,res)=>{
+exports.saveUser = (req, res) => {
 
 
-    service.saveUser(req.body,(err,result)=>{
+    service.saveUser(req.body, (err, result) => {
 
-        if(err){
+        if (err) {
             console.log(err);
-            
+
         }
-        else{
+        else {
             console.log("user Verified sucessfully");
-            
+
             res.send("User Verified Sucessfully");
         }
     })
@@ -99,94 +122,95 @@ exports.saveUser=(req,res)=>{
  * 
  @returns               {res} 
  */
-exports.login=(req,res)=>{
-    
+exports.login = (req, res) => {
+
     //validating the user data
     // validating the user email
-    req.checkBody('email','invalid email').isEmail();
+    req.checkBody('email', 'invalid email').isEmail();
     //validating the user password
-    req.checkBody('password','invalid password').isLength({min:8});
-    
-    var errors=req.validationErrors();
+    req.checkBody('password', 'invalid password').isLength({ min: 8 });
+
+    var errors = req.validationErrors();
     //displaying the errors
-    if(errors){
+    if (errors) {
         console.log(errors[0].msg);
         res.send(errors[0].msg);
-       
-        
+
+
     }
-    else{
+    else {
         //calling the login service
-     
-        // getting the all the elements in object   
-        client.hgetall(req.body.email,function(err,reply){
+
+        // getting the all the elements in object  
+        // 'LOGIN_TOKEN_' + req.body.email 
+        client.hgetall(req.body.email, function (err, reply) {
             // console.log("\n\n\n in client get function\n\n\n");
-            
+
             //checking for error
-            if(err){
+            if (err) {
                 // console.log("\n\n\n"+err+"\n\n\n");
                 console.log(err);
                 res.send(err)
-                
+
             }
-            else{
+            else {
                 // console.log("\n\n\n"+reply+"\n\n\n");
-                
+
                 //if the email present in the redis cache
-                if(reply){
+                if (reply) {
                     // console.log(reply);
-                    
+
                     // the bcrypt password with user entered password
-                    bcrypt.compare(req.body.password,reply.password,(error,result)=>
-                    {
+                    bcrypt.compare(req.body.password, reply.password, (error, result) => {
                         // console.log("\n\n\n in controller bcrypt\n\n\n");
-                        
+
                         console.log(reply);
 
                         if (error) {
-                            
-                            
-                           // console.log(result);
-                            
-                          res.send("invalid password");
+
+
+                            // console.log(result);
+
+                            res.send("invalid password");
 
                         }
-                        else {console.log(reply);
-                            if(!result){
+                        else {
+                            console.log(reply);
+                            if (!result) {
 
-                             //console.log(result);
-                             console.log("invalid password");
-                             
-                             res.send("invalid password");
+                                //console.log(result);
+                                console.log("invalid password");
+
+                                res.send("invalid password");
                             }
-                            else{
+                            else {
                                 console.log(reply);
-                                console.log("\n\nif true");
-                                
+
+
                                 //console.log("logged in as "+reply.name);
-                                res.send("loged in as "+reply.name)
+                                res.send("loged in as " + reply.name)
                             }
 
-                    }})
-                }
-                else{
-                    //if the user details not in redis
-                    service.login(req.body,(err,result)=>{  
-                        if(err)
-                        {
-                            res.send("error "+err);
                         }
-                        else{
+                    })
+                }
+                else {
+                    //if the user details not in redis
+                    service.login(req.body, (err, result) => {
+                        if (err) {
+                            res.send("error " + err);
+                        }
+                        else {
                             console.log(result);
-                            
+
                             res.send(result);
                         }
                     })
                 }
             }
         })
-      
-       
+
+
     }
 }
 /**
@@ -195,15 +219,15 @@ exports.login=(req,res)=>{
  * @description         used to validate the user data from server side and
  *                      calling the service forget
  */
-exports.forgotPassword=(req,res)=>{
+exports.forgotPassword = (req, res) => {
 
     console.log("forget controller");
-    //calling the services of forgotPassword
-    service.forgotPassword(req.body,(err,result)=>{
-        if(err){
+    //calling the services of forg
+    service.forgotPassword(req.body, (err, result) => {
+        if (err) {
             res.send(err)
         }
-        else{
+        else {
             res.send(result);
         }
     })
@@ -217,26 +241,26 @@ exports.forgotPassword=(req,res)=>{
  * 
  @returns               {res} 
  */
-exports.reset=(req,res)=>{
+exports.reset = (req, res) => {
 
     //validating the entered email is valid or not
     // req.checkBody('email','invalid email').isEmail();
-    req.checkBody('updatePassword','invalid password').isLength({min:8});
-    var errors=req.validationErrors();
+    req.checkBody('updatePassword', 'invalid password').isLength({ min: 8 });
+    var errors = req.validationErrors();
     //displaying the errors
-    if(errors){
+    if (errors) {
         console.log(errors[0].msg);
         res.send(errors[0].msg);
     }
-    else{
+    else {
         //calling the reset service
-        service.reset(req.body,(err,result)=>{
-            if(err){
+        service.reset(req.body, (err, result) => {
+            if (err) {
                 console.log(err);
-                res.send("error "+err);
-                
+                res.send("error " + err);
+
             }
-            else{
+            else {
                 res.send(result);
             }
         })
@@ -250,38 +274,38 @@ exports.reset=(req,res)=>{
  * @description     used to store the files in aws-s3 , this call the function upload
  *                   present in the aws.s3.js file 
  */
-exports.upload= (req, res) => {
+exports.upload = (req, res) => {
     /**
      * used to store the result
      */
     let responseResult = {}
-  
-    
-    try{
+
+
+    try {
         //copying the function to singleUpload variable 
         const singleUplaod = upload.single('image')
         //calling the function which is presentg in aws.se.js
         singleUplaod(req, res, function (err) {
-    
+
             //checking for the errors 
             if (err) {
-    
-                console.log("error in controllers  "+err)
+
+                console.log("error in controllers  " + err)
                 responseResult.err = err;
                 responseResult.status = false;
                 res.status(500).send(responseResult)
-    
+
             }
             // if no errors then the file is uploaded sucessfully
             else {
-                res.send("uploaded sucessfully")
-          
+                res.status(200).send("uploaded sucessfully")
+
             }
         })
-        
-    }/**to handle the errors in the try block */catch(err){
+
+    }/**to handle the errors in the try block */catch (err) {
         console.log(err);
-        
+
         responseResult.err = err;
         responseResult.status = false;
         res.status(500).send(responseResult)

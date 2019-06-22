@@ -39,12 +39,7 @@ const fundoo = mongoose.Schema({
         required: [true, "name is required"]
     },
     /**
-    * 	"isVerified" : true,
-
-    * 	"isVerified" : true,
-
-    * 	"isVerified" : true,
- user email to database
+        user email to database
     */	"isVerified": true,
 
     email: {
@@ -205,13 +200,13 @@ exports.login = (body, callback) => {
                     // console.log(result1);
 
 
-                    //    var token=jwt.sign(result1,process.env.SECRETKEY);
+                    var token=jwt.sign(result1,process.env.SECRETKEY);
 
                     //storing the user details in the redis 
                     client.hmset(body.email,result1)
                     // console.log("\n\n\n"+result+"\n\n\n");
 
-                    return callback(null, "logged in as " + result.name);
+                    return callback(null,token);
                 }
             }
             );

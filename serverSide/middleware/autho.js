@@ -11,12 +11,13 @@ const jwt = require('jsonwebtoken')
 exports.authentication = (req,res,next) => {
    console.log("autho");
    
-    console.log("response.body",req.body)
-    console.log("headers",req.headers)
+    // console.log("response.body",req.body)
+    // console.log("headers",req.headers)
     var token = req.header('token');
-    console.log(token)
+    // console.log(token);
     if (token != null) {
         //verifying the token
+
         jwt.verify(token,process.env.SECRETKEY,(err, payload) => {
             let responseResult = {}
 
@@ -29,9 +30,12 @@ exports.authentication = (req,res,next) => {
             }
             else {
                 console.log("in auth payload")
+                // console.log(payload);
                 req.body.payload= payload;
-                console.log(req.body.payload)
-                console.log("authentication token successful",payload);
+              
+                
+                // console.log(req.body.payload)
+                // console.log("authentication token successful",payload);
                 next();
             }
         })

@@ -1,23 +1,28 @@
 Environment variables:
+  - APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL=true
+  - BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/code_code.desktop
   - CLUTTER_IM_MODULE=xim
-  - COLORTERM=truecolor
   - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
   - DESKTOP_SESSION=ubuntu
+  - DISABLE_WAYLAND=1
   - DISPLAY=:0
+  - GDK_PIXBUF_MODULEDIR=/snap/code/9/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+  - GDK_PIXBUF_MODULE_FILE=/home/mobicomp/snap/code/common/.cache/gdk-pixbuf-loaders.cache
   - GDMSESSION=ubuntu
+  - GIO_LAUNCHED_DESKTOP_FILE=/var/lib/snapd/desktop/applications/code_code.desktop
+  - GIO_LAUNCHED_DESKTOP_FILE_PID=2768
   - GJS_DEBUG_OUTPUT=stderr
   - GJS_DEBUG_TOPICS=JS ERROR;JS LOG
   - GNOME_DESKTOP_SESSION_ID=this-is-deprecated
   - GNOME_SHELL_SESSION_MODE=ubuntu
-  - GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/fec7996e_e136_47c6_8dc8_363dd8876436
-  - GNOME_TERMINAL_SERVICE=:1.87
   - GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1
+  - GSETTINGS_SCHEMA_DIR=/snap/code/9/usr/share/glib-2.0/schemas
   - GTK_IM_MODULE=ibus
   - GTK_MODULES=gail:atk-bridge
   - HOME=/home/mobicomp
   - IM_CONFIG_PHASE=2
   - JAVA_HOME=/home/mobicomp/.sonar/native-sonar-scanner/sonar-scanner-3.3.0.1492-linux/jre
-  - LANG=en_IN
+  - LANG=en_GB.UTF-8
   - LANGUAGE=en_IN:en
   - LESSCLOSE=/usr/bin/lesspipe %s %s
   - LESSOPEN=| /usr/bin/lesspipe %s
@@ -30,23 +35,25 @@ Environment variables:
   - QT4_IM_MODULE=xim
   - QT_ACCESSIBILITY=1
   - QT_IM_MODULE=ibus
-  - SESSION_MANAGER=local/FH400:@/tmp/.ICE-unix/1277,unix/FH400:/tmp/.ICE-unix/1277
+  - SESSION_MANAGER=local/FH400:@/tmp/.ICE-unix/1211,unix/FH400:/tmp/.ICE-unix/1211
   - SHELL=/bin/bash
-  - SHLVL=1
+  - SHLVL=2
   - SONARQUBE_SCANNER_PARAMS={}
-  - SSH_AGENT_PID=1451
+  - SSH_AGENT_PID=1560
   - SSH_AUTH_SOCK=/run/user/1000/keyring/ssh
   - TERM=xterm-256color
+  - TERM_PROGRAM=vscode
+  - TERM_PROGRAM_VERSION=1.35.1
   - USER=mobicomp
   - USERNAME=mobicomp
-  - VTE_VERSION=5401
   - WINDOWPATH=2
   - XAUTHORITY=/run/user/1000/gdm/Xauthority
+  - XDG_CACHE_HOME=/home/mobicomp/snap/code/common/.cache
   - XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
   - XDG_CURRENT_DESKTOP=ubuntu:GNOME
   - XDG_DATA_DIRS=/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop
   - XDG_MENU_PREFIX=gnome-
-  - XDG_RUNTIME_DIR=/run/user/1000
+  - XDG_RUNTIME_DIR=/run/user/1000/snap.code
   - XDG_SEAT=seat0
   - XDG_SESSION_DESKTOP=ubuntu
   - XDG_SESSION_ID=1
@@ -106,7 +113,7 @@ System properties:
   - sun.jnu.encoding=UTF-8
   - sun.management.compiler=HotSpot 64-Bit Tiered Compilers
   - sun.os.patch.level=unknown
-  - user.country=IN
+  - user.country=GB
   - user.dir=/home/mobicomp/Desktop/fundoo
   - user.home=/home/mobicomp
   - user.language=en
@@ -124,8 +131,8 @@ SonarQube plugins:
   - SonarQube :: Plugins :: SCM :: SVN 1.6.0.860 (scmsvn)
   - SonarJS 3.2.0.5506 (javascript)
 Global properties:
-  - sonar.core.id=AWtEriUjusJGkI4Xu2jL
-  - sonar.core.startTime=2019-06-15T05:38:25+0000
+  - sonar.core.id=AWsR1txqW_rXb0RGCaKM
+  - sonar.core.startTime=2019-06-18T06:56:41+0000
 Settings for module: chakri
   - sonar.exclusions=node_modules/**/*
   - sonar.host.url=http://localhost:9000
